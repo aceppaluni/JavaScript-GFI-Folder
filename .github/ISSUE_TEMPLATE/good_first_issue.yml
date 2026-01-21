@@ -5,40 +5,26 @@ labels: ["Good First Issue"]
 assignees: []
 
 body:
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        ## **Thanks for contributing!** 😊
+
+        We truly appreciate your time and effort. If this is your first open-source contribution, welcome!  
+        This template is designed to help you create a Good First Issue (GFI): a small, well-scoped task that helps new contributors learn the codebase and workflow.
+        ---
   - type: textarea
     id: intro
     attributes:
       label: 🆕🐥 First Timers Only
       description: Who is this issue for?
       value: |
-        This issue is reserved for people who have never contributed or have made
-        minimal contributions to the **Hiero JavaScript SDK**.
-
-        We recognize that opening a pull request (PR) can be a major barrier for
-        new contributors. The goal of this issue—and all other issues labeled
-        **Good First Issue**—is to help you make your first contribution in a
-        safe, well-guided way.
-
-        No prior knowledge of Hiero, Hedera, or distributed ledger technology is
-        required. Basic familiarity with JavaScript and Git is sufficient.
+        This issue is reserved for people who have never contributed or have made minimal contributions to [Hiero JavaScript SDK](https://hiero.org).  
+        We know that creating a pull request (PR) is a major barrier for new contributors.  
+        The goal of this issue and all other issues labeled **Good First Issue** is to help you make your first contribution to the Hiero JavaScript SDK.
     validations:
       required: false
-
-  - type: markdown
-    attributes:
-      value: |
-        ## 🎯 Purpose of This Issue
-
-        This is an **official Good First Issue** intended for new contributors.
-
-        A Good First Issue must:
-        - Have a **narrow and clearly defined scope**
-        - Be **fully specified** (no design decisions required)
-        - Avoid changes to SDK behavior, APIs, or protocol logic
-        - Be solvable with basic JavaScript knowledge
-
-        > If solving the issue requires deciding *what* to do or *how* something
-        > should behave, it is **not suitable** as a Good First Issue.
 
   - type: markdown
     attributes:
@@ -46,82 +32,163 @@ body:
         > [!IMPORTANT]
         > ### 📋 Good First Issue (GFI) Guidelines
         >
-        > **Acceptable GFI work includes:**
+        > A Good First Issue generally has a narrow scope and clear instructions, with examples or solution provided.
         >
-        > - Small, explicitly defined refactors with **no behavior changes**
-        > - Documentation or JSDoc improvements
-        > - Readability improvements (naming, structure)
-        > - Mechanical changes fully described in this issue
+        > Examples of acceptable GFI work include:
         >
-        > **Not acceptable as GFIs:**
+        > - **Very small, explicitly defined changes to `src` functionality**  
+        >   *(rare and mechanical only — not behavior-changing)*, such as:
+        >   - Fixing JSDoc or type annotations when the exact content is specified
+        >   - Small refactors with no API or behavior change
+        > - **Refactors of examples** that are purely structural:
+        >   - Splitting a monolithic example function into smaller functions
+        >   - Combining separate example functions into one, when explicitly instructed
+        > - **Documentation improvements** that are instruction-driven:
+        >   - Fixing known typos or grammar issues
+        >   - Renaming variables when new names are provided
+        >   - Making explicitly requested changes to comments, JSDoc, or console messages
+        > - **Small, clearly specified edits to tests**
+        >   - Adding known assertions to an existing test file
         >
-        > - Changes to SDK behavior, APIs, or contracts
-        > - Protocol or DLT logic (`_makeTransactionData`, protobuf conversions, etc.)
-        > - Work spanning multiple subsystems
-        > - Tasks requiring architectural or domain knowledge
+        > **What we do NOT consider Good First Issues:**
         >
-        > 📖 Full guidelines:
-        > docs/maintainers/good_first_issue_candidate_guidelines.md
+        > - Writing new documentation, examples, or tests
+        > - Any change that requires deciding *what* to do or *how* something should behave
+        > - Changes to SDK behavior, public APIs, or contracts
+        > - Changes to protocol logic, including `_fromProtobuf` / `_toProtobuf`
+        > - Work spanning multiple files, modules, or subsystems
+        > - Tasks requiring domain, protocol, or architectural knowledge
+        >
+        > 📖 *For more details, see: [`docs/maintainers/good_first_issue_candidate_guidelines.md`](docs/maintainers/good_first_issue_candidate_guidelines.md)*
 
   - type: textarea
     id: issue
     attributes:
-      label: 👾 Description of the Issue
+      label: 👾 Description of the issue
       description: |
-        Describe the issue in a way that is understandable to a new contributor.
-        Do not assume prior knowledge of the codebase or Hedera.
-        Include links to relevant files where helpful.
+        Describe the issue in a way that is understandable to new contributors.  
+        Do NOT assume that contributors know the codebase or SDK.  
+        Include links to relevant files or documentation if helpful.
       value: |
-        The file:
+        Edit here. Example provided below.
 
-        ```
-        src/token/TokenAssociateTransaction.js
-        ```
-
-        implements the `TokenAssociateTransaction` class, which is responsible
-        for associating one or more tokens with an account.
-
-        While the implementation is correct, parts of the file are difficult for
-        new contributors to understand due to limited documentation and dense
-        inline logic.
-
-        Improving readability and documentation would make this file more
-        approachable without changing any behavior.
     validations:
       required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        <!-- Example for problem (hidden in submission) -->
+        ## 👾 Description of the issue - Example
+
+        The example for TokenAssociateTransaction located at `examples/tokens/tokenAssociateTransaction.js` can be improved.  
+        It currently groups all steps in a single `main()` function, which makes it hard for a new contributor to understand each part of the process.
+
+        For example:
+        ```javascript
+        import {
+            Client,
+            AccountId,
+            PrivateKey,
+            Hbar,
+            AccountCreateTransaction,
+            TokenCreateTransaction,
+            TokenAssociateTransaction,
+            ResponseCode
+        } from "@hiero/sdk";
+
+        async function main() {
+            console.log("🚀 Connecting to Hedera testnet...");
+            const client = Client.forTestnet();
+            const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
+            const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
+            client.setOperator(operatorId, operatorKey);
+
+            // Create test account
+            const testKey = PrivateKey.generate();
+            const createAccountTx = new AccountCreateTransaction()
+                .setKey(testKey.publicKey)
+                .setInitialBalance(new Hbar(1));
+            const accountReceipt = await createAccountTx.execute(client);
+            const accountId = accountReceipt.accountId;
+            console.log(`✅ Created test account ${accountId}`);
+
+            // Create tokens
+            const tokens = [];
+            for (let i = 0; i < 3; i++) {
+                const tokenTx = new TokenCreateTransaction()
+                    .setTokenName(`DemoToken${i}`)
+                    .setTokenSymbol(`DTK${i}`)
+                    .setDecimals(2)
+                    .setInitialSupply(100_000)
+                    .setTreasuryAccountId(operatorId);
+                const tokenReceipt = await tokenTx.execute(client);
+                tokens.push(tokenReceipt.tokenId);
+                console.log(`✅ Created token ${tokenReceipt.tokenId}`);
+            }
+
+            // Associate first token
+            await new TokenAssociateTransaction()
+                .setAccountId(accountId)
+                .addTokenId(tokens[0])
+                .execute(client);
+            console.log(`✅ Token ${tokens[0]} associated with account ${accountId}`);
+        }
+
+        main().catch(err => console.error(err));
+        ```
 
   - type: textarea
     id: solution
     attributes:
       label: 💡 Proposed Solution
       description: |
-        Describe the solution at a high level.
-        Focus on *what* should be done, not *why* or alternative approaches.
+        Describe how to solve the issue at a high level.  
+        Focus on *what* should be done, not alternative approaches.
       value: |
-        Improve the readability of `TokenAssociateTransaction.js` by enhancing
-        existing JSDoc comments and adding clarification where helpful.
+        Edit here. Example provided below.
 
-        No logic, behavior, or API changes should be made.
     validations:
       required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        <!-- Example for the solution (hidden in submission) -->
+        ## 💡 Solution - Example
+
+        Split the monolithic `main()` function into smaller, clearly named functions:
+        - `setupClient()`
+        - `createTestAccount()`
+        - `createToken()`
+        - `associateTokenWithAccount()`
+        Call these functions from `main()` to improve readability while keeping behavior identical.
 
   - type: textarea
     id: implementation
     attributes:
       label: 👩‍💻 Implementation Steps
       description: |
-        Describe the technical steps required to implement the solution.
-        These steps should be explicit and easy to follow.
+        Describe the step-by-step technical implementation.
       value: |
-        To complete this task:
+        Edit here. Example provided below.
 
-        - [ ] Review existing JSDoc comments in `TokenAssociateTransaction.js`
-        - [ ] Improve wording where descriptions are unclear or incomplete
-        - [ ] Add missing JSDoc annotations where appropriate
-        - [ ] Ensure no runtime behavior or public API changes
-        - [ ] Run existing tests to confirm nothing breaks
     validations:
       required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        <!-- Example implementation (hidden in submission) -->
+        ### 👩‍💻 Implementation - Example
+
+        To refactor the main function:
+        - [ ] Extract client setup into `setupClient()`
+        - [ ] Extract account creation into `createTestAccount()`
+        - [ ] Extract token creation into `createToken()`
+        - [ ] Extract token association into `associateTokenWithAccount()`
+        - [ ] Ensure `main()` calls these functions in order
+        - [ ] Verify that the output remains the same and tests pass
 
   - type: textarea
     id: acceptance-criteria
@@ -131,15 +198,12 @@ body:
       value: |
         To merge a pull request for this issue:
 
-        - [ ] **Assignment:** Contributor commented `/assign`
-        - [ ] **Scope:** Changes are limited to `TokenAssociateTransaction.js`
-        - [ ] **Behavior:** No SDK behavior or API changes
-        - [ ] **Changelog:** Correct changelog entry added  
-              docs/sdk_developers/changelog_entry.md
-        - [ ] **Signed Commits:** DCO and GPG-signed commits  
-              docs/sdk_developers/signing.md
-        - [ ] **Tests:** All CI checks pass
-        - [ ] **Review:** All review feedback addressed
+        - [ ] **Assignment:** get assigned by commenting `/assign`
+        - [ ] **Changelog Entry:** Correct changelog entry added
+        - [ ] **Signed commits:** commits must be DCO and GPG key signed
+        - [ ] **All Tests Pass:** unit and integration tests must pass
+        - [ ] **Issue is Solved:** The implementation fully addresses the issue
+        - [ ] **No Further Changes:** Code review feedback has been addressed
     validations:
       required: true
 
@@ -149,33 +213,44 @@ body:
       label: 📋 Step-by-Step Contribution Guide
       description: Contribution workflow for new contributors
       value: |
-        If this is your first open-source contribution, follow these steps:
+        If you have never contributed to an open source project on GitHub:
 
         - [ ] Comment `/assign` to request the issue
         - [ ] Fork the repository and create a branch
         - [ ] Make the requested changes
-        - [ ] Sign each commit using `-s -S`
+        - [ ] Sign each commit with `-s -S`
         - [ ] Add a changelog entry
         - [ ] Push your branch and open a pull request
 
-        Helpful resources:
-        - Contributing Guide: docs/CONTRIBUTING.md
-        - Assignment Workflow: docs/sdk_developers/training/workflow/04_assigning_issues.md
-        - Signing Guide: docs/sdk_developers/signing.md
-
         ❗ Pull requests cannot be merged without signed commits and a changelog entry.
+
+  - type: textarea
+    id: ai_usage_guidelines
+    attributes:
+      label: 🤖 AI Usage Guidelines
+      description: Guidance on using AI tools responsibly for this issue
+      value: |
+        You are welcome to use AI to help understand and solve this issue.
+
+        Guidelines:
+        - Only implement what is described in this issue
+        - Avoid changing anything else in the file
+        - Be careful when modifying parameters or return statements
+
+        If unsure, ask a mentor or maintainer for guidance.
     validations:
-      required: true
+      required: false
 
   - type: textarea
     id: information
     attributes:
       label: 🤔 Additional Information
-      description: Extra context or resources for contributors
+      description: Extra resources or context for contributors
       value: |
-        If you need help, feel free to ask questions in the comments.
+        Documentation resources:
+        - [SDK Developer Docs](https://github.com/hiero-ledger/hiero-sdk-js/tree/main/docs/sdk_developers)
+        - [SDK Developer Training](https://github.com/hiero-ledger/hiero-sdk-js/tree/main/docs/sdk_developers/training)
 
-        You can also join our community on Discord:
-        https://discord.gg/hiero
-
-        Maintainers are happy to help first-time contributors succeed!
+        Community:
+        - Join Discord: https://discord.gg/hiero
+        - Attend JavaScript SDK office hours weekly for help
