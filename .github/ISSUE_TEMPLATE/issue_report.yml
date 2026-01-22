@@ -1,7 +1,7 @@
 name: Issue Report
 description: Propose a potential Good First Issue (candidate)
 title: "[Good First Issue Candidate]: "
-labels: ["Good First Issue Candidate"]
+labels: ["Good First Issue Candidate", "bug"]
 assignees: []
 
 body:
