@@ -1,0 +1,169 @@
+---
+name: Bug Report (Title in Progress)
+about: Report unexpected behavior or errors (in progress)
+title: "[BUG] "
+labels: bug
+assignees: ""
+(in progress)
+---
+
+### Environment
+- Device: [e.g., iPhone 14, MacBook Pro]
+- OS: [e.g., iOS 16.3, Windows 11]
+- Browser [e.g., Chrome 115, Safari]
+- Version [e.g., 1.0.3]
+
+  - type: textarea
+    id: issue
+    attributes:
+      label: 👾 Description of the Issue
+      description: |
+        Describe the issue in a way that is understandable to a new contributor.
+        Do not assume prior knowledge of the codebase, Hiero, or distributed ledgers.
+        Include links to relevant files where helpful.
+      value: |
+        Edit here. Example provided below.
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        <!-- Example (hidden in submission) -->
+        ## 👾 Description of the Issue — Example (JavaScript)
+
+        The file:
+
+        ```
+        src/token/TokenAssociateTransaction.js
+        ```
+
+        contains the implementation of the `TokenAssociateTransaction` class.
+
+        The static method `_fromProtobuf()` currently performs multiple responsibilities inline:
+        - Extracting the `tokenAssociate` transaction body from the protobuf
+        - Converting protobuf token IDs into SDK `TokenId` objects
+        - Converting the protobuf account into an SDK `AccountId`
+
+        While the behavior is correct, the inline structure makes the method harder to read
+        and more difficult for new contributors to understand, especially those unfamiliar
+        with protobuf-based data structures.
+
+        The issue is limited to improving readability and structure only.
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: 💡 Proposed Solution
+      description: |
+        Describe the solution at a high level.
+        Focus on *what* should be done, not *why* or alternative approaches.
+      value: |
+        Edit here. Example provided below.
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        <!-- Example (hidden in submission) -->
+        ## 💡 Proposed Solution — Example
+
+        Refactor the `_fromProtobuf()` method by extracting clearly named private
+        helper functions for protobuf-to-SDK conversion logic.
+
+        The refactor should:
+        - Preserve all existing behavior
+        - Avoid modifying public APIs
+        - Improve readability for new contributors
+        - Remain confined to `TokenAssociateTransaction.js`
+
+  - type: textarea
+    id: implementation
+    attributes:
+      label: 👩‍💻 Implementation Steps
+      description: |
+        Describe the technical steps required to implement the solution.
+        These steps should be explicit and easy to follow.
+      value: |
+        Edit here. Example provided below.
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        <!-- Example (hidden in submission) -->
+        ### 👩‍💻 Implementation — Example
+
+        To refactor `_fromProtobuf()`:
+
+        - [ ] Identify the logic that:
+          - Extracts the `tokenAssociate` transaction body
+          - Converts protobuf token IDs into `TokenId` instances
+          - Converts the protobuf account into an `AccountId`
+        - [ ] Extract each responsibility into a private helper function, such as:
+          - `_extractTokenIdsFromProtobuf(associateToken)`
+          - `_extractAccountIdFromProtobuf(associateToken)`
+        - [ ] Call the helper functions from `_fromProtobuf()`
+        - [ ] Ensure no behavior changes occur
+        - [ ] Run existing tests and lint checks
+
+        No new functionality should be introduced.
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: ✅ Acceptance Criteria
+      description: Checklist required for merging a pull request
+      value: |
+        To merge a pull request for this issue:
+
+        - [ ] **Assignment:** Contributor commented `/assign`
+        - [ ] **Scope:** Changes are limited to `TokenAssociateTransaction.js`
+        - [ ] **Behavior:** No SDK behavior or API changes
+        - [ ] **Changelog:** Correct changelog entry added  
+              docs/sdk_developers/changelog_entry.md
+        - [ ] **Signed Commits:** DCO and GPG-signed commits  
+              docs/sdk_developers/signing.md
+        - [ ] **Tests:** All CI checks pass
+        - [ ] **Review:** All code review feedback addressed
+    validations:
+      required: true
+
+  - type: textarea
+    id: contribution_steps
+    attributes:
+      label: 📋 Step-by-Step Contribution Guide
+      description: Contribution workflow for new contributors
+      value: |
+        If this is your first time contributing to an open-source project, follow these steps:
+
+        - [ ] Comment `/assign` to request the issue
+        - [ ] Fork the repository and create a branch
+        - [ ] Make the requested changes
+        - [ ] Sign each commit using `-s -S`
+        - [ ] Add a changelog entry
+        - [ ] Push your branch and open a pull request
+
+        Helpful resources:
+        - Contributing Guide: docs/CONTRIBUTING.md
+        - Assignment Workflow: docs/sdk_developers/training/workflow/04_assigning_issues.md
+        - Signing Guide: docs/sdk_developers/signing.md
+
+        ❗ Pull requests **cannot be merged** without signed commits and a changelog entry.
+    validations:
+      required: true
+
+  - type: textarea
+    id: information
+    attributes:
+      label: 🤔 Additional Information
+      description: Extra context or resources for contributors
+      value: |
+        If you need help, feel free to ask questions in the comments.
+
+        You can also join our community on Discord:
+        https://discord.gg/hiero (or project-specific invite)
+
+        Maintainers are happy to help first-time contributors succeed!
