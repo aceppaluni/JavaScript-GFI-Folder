@@ -1,9 +1,10 @@
-### Environment
-- Device: [e.g., iPhone 14, MacBook Pro]
-- OS: [e.g., iOS 16.3, Windows 11]
-- Browser [e.g., Chrome 115, Safari]
-- Version [e.g., 1.0.3]
+name: Good First Issue Candidate Template
+description: Propose a potential Good First Issue (candidate)
+title: "[Good First Issue Candidate]: "
+labels: ["Good First Issue Candidate"]
+assignees: []
 
+body:
   - type: textarea
     id: issue
     attributes:
